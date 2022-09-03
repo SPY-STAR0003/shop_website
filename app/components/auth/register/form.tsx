@@ -1,30 +1,32 @@
+// next & react
+import Router from 'next/router';
 // assets
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 // libraries
-import { Formik, Form, withFormik } from 'formik';
-import { loginFormSchema } from '../../../modules/yup/form';
+import { Form, withFormik } from 'formik';
+import { RegisterFormSchema } from '../../../modules/yup/form';
+import callApi from '../../../api/callApi';
 // components
 import Checkbox from '../../../global/form/checkbox'
 import Input from '../../../global/form/input'
-import MyLink from "../../../global/link/link"
 import Button from '../../../global/form/button'
 // types
-import { loginFormInputsProps , LoginFormValuesProps } from '../../../types/form';
+import { AuthFormInputsProps , RegisterFormValuesProps } from '../../../types/form';
 // schemas
-import { formInputsInfo } from '../../../schema/form/loginInputs';
+import { registerFormInputsInfo } from '../../../schema/form/loginInputs';
 
 interface AuthProps {
     isLogin : boolean
 }
 
-const InnerLoginForm : React.FC<AuthProps> = ({isLogin}) => {
+const InnerRegisterForm : React.FC<AuthProps> = ({isLogin}) => {
 
     return (
         <Form className="mt-8 space-y-6" action="#" method="POST">
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="space-y-4 rounded-md shadow-sm">
                 {
-                    formInputsInfo.map((item : loginFormInputsProps, index : number) => (
+                    registerFormInputsInfo.map((item : AuthFormInputsProps, index : number) => (
                         <Input
                             key= {index}
                             id={item?.id}
@@ -43,27 +45,28 @@ const InnerLoginForm : React.FC<AuthProps> = ({isLogin}) => {
                     type={"checkbox"}
                     label={"مرا به خاطر بسپار"}
                 />
-                {
-                    isLogin && <MyLink text={"رمز عبور خود را فراموش کرده ام"} />
-                }
             </div>
-            <Button text={isLogin ? "ورود" : "ثبت نام"} Icon={LockClosedIcon} />
+            <Button text="ثبت نام" Icon={LockClosedIcon} />
         </Form>
     )
 }
 
-interface InnerLoginFormProps {
+interface InnerRegisterFormProps {
     
 }
 
-const LoginForm = withFormik<InnerLoginFormProps, LoginFormValuesProps>({
-    mapPropsToValues :(props : InnerLoginFormProps) => ({
+const RegisterForm = withFormik<InnerRegisterFormProps, RegisterFormValuesProps>({
+    mapPropsToValues :(props : InnerRegisterFormProps) => ({
         name : "", email: "", password: ""
     }),
-    handleSubmit: (values : LoginFormValuesProps) => {
-        console.log(values)
-    },
-    validationSchema : loginFormSchema
-})(InnerLoginForm)
+    handleSubmit: async (values : RegisterFormValuesProps) => {
+        const response = await callApi().post("/auth/register", values)
 
-export default LoginForm;
+        if (response.status === 201) {
+            Router.push('/auth/login')
+        }
+    },
+    validationSchema : RegisterFormSchema
+})(InnerRegisterForm)
+
+export default RegisterForm;

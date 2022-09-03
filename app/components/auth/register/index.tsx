@@ -1,4 +1,4 @@
-import Form from "../similar/form"
+import Form from "./form"
 import Header from "../similar/header"
 
 const Register : React.FC = () => {
@@ -8,7 +8,7 @@ const Register : React.FC = () => {
             <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className="w-full bg-white p-6 max-w-md space-y-8 rounded">
                     <Header isLogin={false} />
-                    <Form isLogin={false} />        
+                    <Form />        
                 </div>
             </div>
         </div>

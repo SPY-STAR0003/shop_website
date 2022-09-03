@@ -1,4 +1,4 @@
-export interface loginFormInputsProps {
+export interface AuthFormInputsProps {
     name : string,
     type ?: string,
     id ?: string,
@@ -9,6 +9,11 @@ export interface loginFormInputsProps {
 
 export interface LoginFormValuesProps {
     name: string
+    email: string
+    password: string
+}
+
+export interface RegisterFormValuesProps {
     email: string
     password: string
 }
