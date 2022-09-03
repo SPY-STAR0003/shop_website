@@ -1,12 +1,12 @@
+// react & next
+import Link from 'next/link'
+
 // types
 import type { NextPage } from 'next'
 
-// components
-import Login from '../app/login'
-
 const LoginPage: NextPage = () => {
   return (
-    <Login />
+    <Link href={'./auth/login'}> Go to Login Page </Link>
   )
 }
 

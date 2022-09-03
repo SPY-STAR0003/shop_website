@@ -6,3 +6,9 @@ export interface loginFormInputsProps {
     label ?: string,
     autoComplete ?: string,
 }
+
+export interface LoginFormValuesProps {
+    name: string
+    email: string
+    password: string
+}
