@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 
 // assets
 import '../styles/globals.css';
+import 'sweetalert2/src/sweetalert2.scss'
 
 // libraries
 import {setLocale} from "yup";

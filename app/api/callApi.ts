@@ -1,4 +1,8 @@
+// libraries
 import axios from "axios";
+
+// components
+import ErrorValidation from "../exceptions/errorValidation";
 
 const callApi = () => {
 
@@ -6,20 +10,32 @@ const callApi = () => {
         baseURL : 'http://localhost:5000/api'
     })
 
-    axios.interceptors.request.use(
+    axiosInstance.interceptors.request.use(
         (config) => {
 
             return config
         },
-        (err) => console.log(err)
+        (err) => {
+
+
+            return Promise.reject(err);
+        }
     )
 
-    axios.interceptors.response.use(
-        (res) => {
-
+    axiosInstance.interceptors.response.use(
+        res => {
             return res
         },
-        (err) => console.log(err)
+        err => {
+
+            const res = err?.response
+
+            if(res.status === 422) {
+                throw new ErrorValidation(res.data.errors)
+            }
+
+            return Promise.reject(err);
+        }
     )
 
     return axiosInstance
