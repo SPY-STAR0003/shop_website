@@ -2,8 +2,8 @@
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 
 // libraries
-import { Formik, Form, withFormik } from 'formik';
-import { loginFormSchema } from '../../../../modules/yup/form';
+import { Form, withFormik } from 'formik';
+import { loginPhoneFormSchema } from '../../../../modules/yup/form';
 
 // components
 import Checkbox from '../../../../global/form/checkbox'
@@ -13,7 +13,7 @@ import Button from '../../../../global/form/button'
 import ErrorValidation from '../../../../exceptions/errorValidation';
 
 // types
-import { AuthFormInputsProps , LoginFormValuesProps } from '../../../../types/form';
+import { AuthFormInputsProps , LoginPhoneFormValuesProps } from '../../../../types/form';
 
 // schemas
 import { loginNumberformInputsInfo } from '../../../../schema/form/loginInputs';
@@ -58,12 +58,14 @@ interface InnerLoginFormProps {
     setCookie : any;
 }
 
-const LoginForm = withFormik<InnerLoginFormProps, LoginFormValuesProps>({
+const LoginForm = withFormik<InnerLoginFormProps, LoginPhoneFormValuesProps>({
     mapPropsToValues :(props : InnerLoginFormProps) => ({
-        email: "", password: ""
+        phone: "", password: ""
     }),
-    handleSubmit: async (values : LoginFormValuesProps, {props , setFieldError}) => {
+    handleSubmit: async (values : LoginPhoneFormValuesProps, {props , setFieldError}) => {
         
+        console.log(values)
+
         try {
             const response = await callApi().post("/auth/login", values)
 
@@ -83,7 +85,7 @@ const LoginForm = withFormik<InnerLoginFormProps, LoginFormValuesProps>({
             }
         }
     },
-    validationSchema : loginFormSchema
+    validationSchema : loginPhoneFormSchema
 })(InnerLoginForm)
 
 export default LoginForm;

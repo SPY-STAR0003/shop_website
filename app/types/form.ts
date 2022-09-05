@@ -17,3 +17,17 @@ export interface RegisterFormValuesProps {
     email: string
     password: string
 }
+
+export interface LoginPhoneFormValuesProps {
+    phone: string
+    password: string
+}
+
+export interface VertifyPhoneFormValuesProps {
+    code : string
+}
+export interface RegisterPhoneFormValuesProps {
+    name: string
+    phone: string
+    password: string
+}

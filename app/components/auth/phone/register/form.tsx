@@ -4,16 +4,16 @@ import Router from 'next/router';
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 // libraries
 import { Form, withFormik } from 'formik';
-import { RegisterFormSchema } from '../../../../modules/yup/form';
+import { registerPhoneFormSchema } from '../../../../modules/yup/form';
 import callApi from '../../../../api/callApi';
 // components
 import Checkbox from '../../../../global/form/checkbox'
 import Input from '../../../../global/form/input'
 import Button from '../../../../global/form/button'
 // types
-import { AuthFormInputsProps , RegisterFormValuesProps } from '../../../../types/form';
+import { AuthFormInputsProps , RegisterPhoneFormValuesProps } from '../../../../types/form';
 // schemas
-import { registerFormInputsInfo, registerNumberFormInputsInfo } from '../../../../schema/form/loginInputs';
+import { registerNumberFormInputsInfo } from '../../../../schema/form/loginInputs';
 
 interface AuthProps {
     isLogin : boolean
@@ -55,18 +55,21 @@ interface InnerRegisterFormProps {
     
 }
 
-const RegisterForm = withFormik<InnerRegisterFormProps, RegisterFormValuesProps>({
+const RegisterForm = withFormik<InnerRegisterFormProps, RegisterPhoneFormValuesProps>({
     mapPropsToValues :(props : InnerRegisterFormProps) => ({
-        name : "", email: "", password: ""
+        name : "",phone: "" , password: ""
     }),
-    handleSubmit: async (values : RegisterFormValuesProps) => {
-        const response = await callApi().post("/auth/register", values)
+    handleSubmit: async (values : RegisterPhoneFormValuesProps) => {
+
+        const response = await callApi().post("/auth/register", values);
+
+        console.log(response)
 
         if (response.status === 201) {
-            Router.push('/auth/login')
+            Router.push('./vertify')
         }
     },
-    validationSchema : RegisterFormSchema
+    validationSchema : registerPhoneFormSchema
 })(InnerRegisterForm)
 
 export default RegisterForm;

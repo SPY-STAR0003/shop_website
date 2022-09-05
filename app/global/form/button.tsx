@@ -6,13 +6,14 @@ interface ButtonProps {
     disabled ?: boolean
     customColor ?: string
     small ?: boolean
+    type ?: "button" | "submit" | "reset"
 }
 
-const Button : React.FC<ButtonProps> = ({Icon, text, customClasses, small,customColor , disabled}) => {
+const Button : React.FC<ButtonProps> = ({Icon, text, customClasses, small,customColor , disabled, type}) => {
     return (
         <div>
             <button
-                type="submit"
+                type={type ?? "submit"}
                 className={`${customColor ?? "bg-indigo-600 text-white hover:bg-indigo-700"} ${customClasses ?? ""} ${small ? "text-xs" : "text-sm"} group relative flex w-full justify-center rounded-md border border-transparent py-2 px-4 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
                 disabled={disabled ? true : false}
             >

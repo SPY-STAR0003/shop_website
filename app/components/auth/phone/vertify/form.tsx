@@ -1,26 +1,18 @@
 // next & react
 import Router from 'next/router';
-// assets
-import { LockClosedIcon } from '@heroicons/react/20/solid'
 // libraries
 import { Form, withFormik } from 'formik';
-import { RegisterFormSchema } from '../../../../modules/yup/form';
+import { vertifyPhoneFormSchema } from '../../../../modules/yup/form';
 import callApi from '../../../../api/callApi';
 // components
-import Checkbox from '../../../../global/form/checkbox'
 import Input from '../../../../global/form/input'
 import Button from '../../../../global/form/button'
 // types
-import { AuthFormInputsProps , RegisterFormValuesProps } from '../../../../types/form';
+import {  VertifyPhoneFormValuesProps } from '../../../../types/form';
 // schemas
-import { registerNumberFormInputsInfo } from '../../../../schema/form/loginInputs';
 import { useEffect, useState } from 'react';
 
-interface AuthProps {
-    isLogin : boolean
-}
-
-const InnerRegisterForm : React.FC<AuthProps> = ({isLogin}) => {
+const InnerRegisterForm : React.FC = () => {
 
     const [buttonText, setButtonText] = useState<string>(`ارسال مجدد کد تایید در 00:05 آینده`);
     const [counter, setCounter] = useState(5);
@@ -72,18 +64,18 @@ interface InnerRegisterFormProps {
     
 }
 
-const RegisterForm = withFormik<InnerRegisterFormProps, RegisterFormValuesProps>({
+const RegisterForm = withFormik<InnerRegisterFormProps, VertifyPhoneFormValuesProps>({
     mapPropsToValues :(props : InnerRegisterFormProps) => ({
-        name : "", email: "", password: ""
+        code : ""
     }),
-    handleSubmit: async (values : RegisterFormValuesProps) => {
+    handleSubmit: async (values : VertifyPhoneFormValuesProps) => {
         const response = await callApi().post("/auth/register", values)
 
         if (response.status === 201) {
             Router.push('/auth/login')
         }
     },
-    validationSchema : RegisterFormSchema
+    validationSchema : vertifyPhoneFormSchema
 })(InnerRegisterForm)
 
 export default RegisterForm;

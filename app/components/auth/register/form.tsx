@@ -4,7 +4,7 @@ import Router from 'next/router';
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 // libraries
 import { Form, withFormik } from 'formik';
-import { RegisterFormSchema } from '../../../modules/yup/form';
+import { registerFormSchema } from '../../../modules/yup/form';
 import callApi from '../../../api/callApi';
 // components
 import Checkbox from '../../../global/form/checkbox'
@@ -66,7 +66,7 @@ const RegisterForm = withFormik<InnerRegisterFormProps, RegisterFormValuesProps>
             Router.push('/auth/login')
         }
     },
-    validationSchema : RegisterFormSchema
+    validationSchema : registerFormSchema
 })(InnerRegisterForm)
 
 export default RegisterForm;
