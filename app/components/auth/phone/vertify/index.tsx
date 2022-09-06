@@ -7,15 +7,26 @@ import Form from "./form";
 import Header from "./header";
 
 // libraries
-import { useAppSelector } from "../../../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../../../hooks/redux";
 import { useCookies } from "react-cookie";
+import { setToken } from "../../../../store/slices/auth";
 
 const Verify : React.FC = () => {
 
+    const dispatch = useAppDispatch()
     const [cookie, setCookie] = useCookies(["auth_token"])
     const userToken = useAppSelector(state => state.auth.token)
 
+    const clearTokenFromRedux = () => {
+        dispatch(setToken(undefined))
+    }
+
     useEffect(() => {
+        Router.beforePopState(() => {
+            clearTokenFromRedux()
+            return true
+        })
+
         if(!userToken) Router.push("/404")
     }, [userToken])
 
@@ -24,7 +35,7 @@ const Verify : React.FC = () => {
             <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className="w-full bg-white p-6 max-w-md space-y-8 rounded">
                     <Header />
-                    <Form token={userToken} setCookie={setCookie}/>        
+                    <Form clearTokenFromRedux={clearTokenFromRedux} token={userToken} setCookie={setCookie}/>        
                 </div>
             </div>
         </div>

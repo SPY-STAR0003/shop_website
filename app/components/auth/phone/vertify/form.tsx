@@ -62,8 +62,9 @@ const InnerRegisterForm : React.FC = () => {
 }
 
 interface InnerRegisterFormProps {
-    token: string
+    token ?: string
     setCookie : any
+    clearTokenFromRedux : () => void
 }
 
 const RegisterForm = withFormik<InnerRegisterFormProps, VertifyPhoneFormValuesProps>({
@@ -82,6 +83,8 @@ const RegisterForm = withFormik<InnerRegisterFormProps, VertifyPhoneFormValuesPr
                     sameSite : "lax"
                 })
             }
+            await Router.push("/")
+            props.clearTokenFromRedux()
             MyToast("success", "به پنل مدیریت خوش آمدید !" , "25rem")
         } catch (error) {
             MyToast("error", "کد وارد شده صحیح نمی باشد !" , "25rem")
@@ -91,7 +94,3 @@ const RegisterForm = withFormik<InnerRegisterFormProps, VertifyPhoneFormValuesPr
 })(InnerRegisterForm)
 
 export default RegisterForm;
-
-// data:
-// status: "success"
-// user: {id: 4, name: 'ahmad', phone: '09130848211', token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiY…AyNn0.EqIIN7jL8tJd55bhWW5jhmQOZXS4P721vELebvbxRIk', loggedin_at: null, …}
