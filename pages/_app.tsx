@@ -7,6 +7,8 @@ import 'sweetalert2/src/sweetalert2.scss'
 
 // libraries
 import {setLocale} from "yup";
+import { store } from "../app/store";
+import { Provider } from 'react-redux';
 
 setLocale({
   mixed : {
@@ -20,7 +22,11 @@ setLocale({
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <Provider store={store}>
+      <Component {...pageProps} />
+    </Provider>
+  )
 }
 
 export default MyApp

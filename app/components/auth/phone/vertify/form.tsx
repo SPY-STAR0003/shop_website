@@ -11,6 +11,7 @@ import Button from '../../../../global/form/button'
 import {  VertifyPhoneFormValuesProps } from '../../../../types/form';
 // schemas
 import { useEffect, useState } from 'react';
+import MyToast from '../../../../modules/swal/toast';
 
 const InnerRegisterForm : React.FC = () => {
 
@@ -45,8 +46,8 @@ const InnerRegisterForm : React.FC = () => {
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="space-y-4 rounded-md shadow-sm">
                 <Input
-                    id={"vertifyPhone"}
-                    name={"vertifyPhone"}
+                    id={"code"}
+                    name={"code"}
                     type={"number"}
                     placeholder={" کد دریافت شده روی شماره خود را در اینجا وارد کنید ..."}
                     autoComplete={"number"}
@@ -54,28 +55,43 @@ const InnerRegisterForm : React.FC = () => {
             </div>
             <div className={"space-y-2"}>
                 <Button text={"تایید کد"} Icon={false} />
-                <Button disabled={btnClass.disable} customColor={btnClass.classes} small={true} text={buttonText} Icon={false} />
+                <Button type={"button"} disabled={btnClass.disable} customColor={btnClass.classes} small={true} text={buttonText} Icon={false} />
             </div>
         </Form>
     )
 }
 
 interface InnerRegisterFormProps {
-    
+    token: string
+    setCookie : any
 }
 
 const RegisterForm = withFormik<InnerRegisterFormProps, VertifyPhoneFormValuesProps>({
     mapPropsToValues :(props : InnerRegisterFormProps) => ({
-        code : ""
+        code : "", token : props.token
     }),
-    handleSubmit: async (values : VertifyPhoneFormValuesProps) => {
-        const response = await callApi().post("/auth/register", values)
+    handleSubmit: async (values : VertifyPhoneFormValuesProps, {props}) => {
 
-        if (response.status === 201) {
-            Router.push('/auth/login')
+        try {
+            const response = await callApi().post("/auth/login/verify-phone", values)
+            if (response.data.status === "success") {
+                props.setCookie("auth_token", props.token , {
+                    maxAge : 60 * 60 * 24,
+                    path : "/",
+                    domain : "localhost",
+                    sameSite : "lax"
+                })
+            }
+            MyToast("success", "به پنل مدیریت خوش آمدید !" , "25rem")
+        } catch (error) {
+            MyToast("error", "کد وارد شده صحیح نمی باشد !" , "25rem")
         }
     },
     validationSchema : vertifyPhoneFormSchema
 })(InnerRegisterForm)
 
 export default RegisterForm;
+
+// data:
+// status: "success"
+// user: {id: 4, name: 'ahmad', phone: '09130848211', token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiY…AyNn0.EqIIN7jL8tJd55bhWW5jhmQOZXS4P721vELebvbxRIk', loggedin_at: null, …}

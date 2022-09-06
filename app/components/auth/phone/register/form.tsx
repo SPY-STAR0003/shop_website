@@ -14,6 +14,7 @@ import Button from '../../../../global/form/button'
 import { AuthFormInputsProps , RegisterPhoneFormValuesProps } from '../../../../types/form';
 // schemas
 import { registerNumberFormInputsInfo } from '../../../../schema/form/loginInputs';
+import MyToast from '../../../../modules/swal/toast';
 
 interface AuthProps {
     isLogin : boolean
@@ -66,7 +67,8 @@ const RegisterForm = withFormik<InnerRegisterFormProps, RegisterPhoneFormValuesP
         console.log(response)
 
         if (response.status === 201) {
-            Router.push('./vertify')
+            Router.push('./login')
+            MyToast("success", "ثبت نام شما با موفقیت انجام شد لطفاً برای ورود اطلاعات خود را وارد کنید !" , "50rem")
         }
     },
     validationSchema : registerPhoneFormSchema

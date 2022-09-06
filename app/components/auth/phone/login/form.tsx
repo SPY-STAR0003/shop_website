@@ -4,6 +4,8 @@ import { LockClosedIcon } from '@heroicons/react/20/solid'
 // libraries
 import { Form, withFormik } from 'formik';
 import { loginPhoneFormSchema } from '../../../../modules/yup/form';
+import { AppDispatch } from '../../../../store';
+import { setToken } from '../../../../store/slices/auth';
 
 // components
 import Checkbox from '../../../../global/form/checkbox'
@@ -19,6 +21,7 @@ import { AuthFormInputsProps , LoginPhoneFormValuesProps } from '../../../../typ
 import { loginNumberformInputsInfo } from '../../../../schema/form/loginInputs';
 import callApi from '../../../../api/callApi';
 import MyToast from '../../../../modules/swal/toast';
+import Router from 'next/router';
 
 
 const InnerLoginForm : React.FC = () => {
@@ -56,6 +59,7 @@ const InnerLoginForm : React.FC = () => {
 
 interface InnerLoginFormProps {
     setCookie : any;
+    dispatch : AppDispatch
 }
 
 const LoginForm = withFormik<InnerLoginFormProps, LoginPhoneFormValuesProps>({
@@ -63,27 +67,25 @@ const LoginForm = withFormik<InnerLoginFormProps, LoginPhoneFormValuesProps>({
         phone: "", password: ""
     }),
     handleSubmit: async (values : LoginPhoneFormValuesProps, {props , setFieldError}) => {
-        
-        console.log(values)
 
         try {
+            // send a request to get a token for user
             const response = await callApi().post("/auth/login", values)
-
             if (response.status === 200) {
-                props.setCookie('shopWebsite', response.data.token, {
-                    maxAge : 3600 * 60 * 24 * 30,
-                    domain : 'localhost',
-                    path : '/',
-                    sameSite : 'lax'
-                })
-                MyToast("success", `به پنل کاربری تان خوش آمدید .`, "25rem")
+                // save token to store to use in verify page
+                props.dispatch(setToken(response?.data.token))
+                // show a Toast to make UX better :) & push user to next page
+                MyToast("info", "کد تایید برای شما ارسال گردید", "30rem")
+                Router.push("./vertify");
             }
         } catch(err : any) {
             if (err instanceof ErrorValidation) {
+                // error will show in formik form by use their names !
                 Object.entries(err.messages).forEach(( [ key , value ] ) => setFieldError(key,value as string))
                 MyToast("error", "کاربری با این مشخصات یافت نشد ! ", "30rem")
             }
         }
+
     },
     validationSchema : loginPhoneFormSchema
 })(InnerLoginForm)
